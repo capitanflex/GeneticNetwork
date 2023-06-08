@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Bot : MonoBehaviour
 {
-    private float[] input = new float[5];//input to the neural network
+    private float[] input = new float[5];
     public NeuralNetwork network;
-    public LayerMask raycastMask;//Mask for the sensors
+    public LayerMask raycastMask;
 
     public float speedFactor;
     public float rotationFactor;
@@ -17,54 +17,54 @@ public class Bot : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isCrashed)//if the car has not collided with the wall, it uses the neural network to get an output
+        if (!isCrashed)
         {
-            for (int i = 0; i < 5; i++)//draws five debug rays as inputs
+            for (int i = 0; i < 5; i++)
             {
-                Vector3 newVector = Quaternion.AngleAxis(i * 45 - 90, new Vector3(0, 1, 0)) * transform.right;//calculating angle of raycast
+                Vector3 newVector = Quaternion.AngleAxis(i * 45 - 90, new Vector3(0, 1, 0)) * transform.right;
                 RaycastHit hit;
                 Ray Ray = new Ray(transform.position, newVector);
-                // Debug.DrawRay(Ray.origin, Ray.direction*10);
+                
                 if (Physics.Raycast(Ray, out hit, 10, raycastMask))
                 {
-                    input[i] = (10 - hit.distance) / 10;//return distance, 1 being close
+                    input[i] = (10 - hit.distance) / 10;
                 }
                 else
                 {
-                    input[i] = 0;//if nothing is detected, will return 0 to network
+                    input[i] = 0;
                 }
             }
 
-            float[] output = network.FeedForward(input);//Call to network to feedforward
+            float[] output = network.FeedForward(input);
 
-            transform.Rotate(0, output[0] * rotationFactor, 0, Space.World);//controls the cars movement
-            transform.position += this.transform.right * (output[1] * speedFactor);//controls the cars turning
+            transform.Rotate(0, output[0] * rotationFactor, 0, Space.World);
+            transform.position += this.transform.right * (output[1] * speedFactor);
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("CheckPoint"))//check if the car passes a gate
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("CheckPoint"))
         {
             GameObject[] checkPoints = GameObject.FindGameObjectsWithTag("CheckPoint");
             for (int i = 0; i < checkPoints.Length; i++)
             {
                 if (collision.collider.gameObject == checkPoints[i] && i == (checkpointIndex + 1 + checkPoints.Length) % checkPoints.Length)
                 {
-                    checkpointIndex++;//if the gate is one ahead of it, it increments the position, which is used for the fitness/performance of the network
+                    checkpointIndex++;
                     break;
                 }
             }
         }
         else if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Learner"))
         {
-            isCrashed = true;//stop operation if car has collided
+            isCrashed = true;
 
         }
     }
 
     public void UpdateFitness()
     {
-        network.fitness = checkpointIndex;//updates fitness of network for sorting
+        network.fitness = checkpointIndex;
     }
 }

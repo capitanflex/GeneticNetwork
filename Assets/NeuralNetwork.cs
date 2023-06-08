@@ -7,13 +7,13 @@ using Random = UnityEngine.Random;
 
 public class NeuralNetwork : IComparable<NeuralNetwork>
 {
-    private int[] layers;//layers
-    private float[][] neurons;//neurons
-    private float[][] biases;//biasses
-    private float[][][] weights;//weights
-    private int[] activations;//layers
+    private int[] layers;
+    private float[][] neurons;
+    private float[][] biases;
+    private float[][][] weights;
+    private int[] activations;
     
-    public float fitness = 0;//fitness
+    public float fitness = 0;
     
 
     public NeuralNetwork(int[] layers)
@@ -28,7 +28,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         InitWeights();
     }
 
-    private void InitNeurons()//create empty storage array for the neurons in the network.
+    private void InitNeurons()
     {
         List<float[]> neuronsList = new List<float[]>();
         for (int i = 0; i < layers.Length; i++)
@@ -38,7 +38,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         neurons = neuronsList.ToArray();
     }
 
-    private void InitBiases()//initializes and populates array for the biases being held within the network.
+    private void InitBiases()
     {
         List<float[]> biasList = new List<float[]>();
         for (int i = 0; i < layers.Length; i++)
@@ -53,7 +53,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         biases = biasList.ToArray();
     }
 
-    private void InitWeights()//initializes random array for the weights being held in the network.
+    private void InitWeights()
     {
         List<float[][]> weightsList = new List<float[][]>();
         for (int i = 1; i < layers.Length; i++)
@@ -65,7 +65,6 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
                 float[] neuronWeights = new float[neuronsInPreviousLayer];
                 for (int k = 0; k < neuronsInPreviousLayer; k++)
                 {
-                    //float sd = 1f / ((neurons[i].Length + neuronsInPreviousLayer) / 2f);
                     neuronWeights[k] = Random.Range(-0.5f, 0.5f);
                 }
                 layerWeightsList.Add(neuronWeights);
@@ -77,7 +76,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         
     }
 
-    public float[] FeedForward(float[] inputs)//feed forward, inputs >==> outputs.
+    public float[] FeedForward(float[] inputs)
     {
         for (int i = 0; i < inputs.Length; i++)
         {
@@ -100,13 +99,12 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
     }
 
     
-    //
     public float activate(float value)
     {
         return (float)Math.Tanh(value);
     }
 
-    public void Mutate(int chance, float val)//used as a simple mutation function for any genetic implementations.
+    public void Mutate(int chance, float val)
     {
         for (int i = 0; i < biases.Length; i++)
         {
@@ -146,21 +144,16 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         }
     }
 
-    public int CompareTo(NeuralNetwork other) //Comparing For NeuralNetworks performance.
+    public int CompareTo(NeuralNetwork other) 
     {
-        
-        if (other == null) return 1;
-
+        if (other == null) 
+            return 1;
         if (fitness > other.fitness)
             return 1;
         if (fitness < other.fitness)
-        {
-            // Debug.Log(other.fitness);
             return -1;
-        }
         
         return 0;
-        
     }
 
     public NeuralNetwork copy(NeuralNetwork nn) //For creatinga deep copy, to ensure arrays are serialzed.
@@ -185,7 +178,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         return nn;
     }
 
-    public void Load(string path)//this loads the biases and weights from within a file into the neural network.
+    public void Load(string path)
     {
         TextReader tr = new StreamReader(path);
         int numberOfLines = (int)new FileInfo(path).Length;
@@ -222,7 +215,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         }
     }
 
-    public void Save(string path)//this is used for saving the biases and weights within the network to a file.
+    public void Save(string path)
     {
         File.Create(path).Close();
         StreamWriter writer = new StreamWriter(path, true);

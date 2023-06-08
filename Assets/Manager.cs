@@ -59,7 +59,7 @@ public class Manager : MonoBehaviour
             }
 
             networks.Sort();
-            networks[populationSize - 1].Save("Assets/Save.txt");//saves networks weights and biases to file, to preserve network performance
+            networks[populationSize - 1].Save("Assets/Save.txt");
 
             generation += 1;
             scoreText.text = "Best score: " + networks[populationSize - 1].fitness;
@@ -68,10 +68,10 @@ public class Manager : MonoBehaviour
             var new_networks = new List<NeuralNetwork>();
             for (int i = 0; i < populationSize / 2; i++)
             {
-                var parent1 = networks[i];
-                var parent2 = networks[i + populationSize / 2];
-                var child1 = parent1.copy(new NeuralNetwork(layers));
-                var child2 = parent2.copy(new NeuralNetwork(layers));
+                NeuralNetwork parent1 = networks[i];
+                NeuralNetwork parent2 = networks[i + populationSize / 2];
+                NeuralNetwork child1 = parent1.copy(new NeuralNetwork(layers));
+                NeuralNetwork child2 = parent2.copy(new NeuralNetwork(layers));
                 child1.Crossover(child2);
                 child1.Mutate((int)(1 / mutationChance), mutationStrength);
                 child2.Mutate((int)(1 / mutationChance), mutationStrength);
