@@ -156,7 +156,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         return 0;
     }
 
-    public NeuralNetwork copy(NeuralNetwork nn) //For creatinga deep copy, to ensure arrays are serialzed.
+    public NeuralNetwork copy(NeuralNetwork nn) 
     {
         for (int i = 0; i < biases.Length; i++)
         {
@@ -195,7 +195,6 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
             {
                 for (int j = 0; j < biases[i].Length; j++)
                 {
-                    Debug.Log(listLines[index]);
                     biases[i][j] = float.Parse(listLines[index], CultureInfo.InvariantCulture.NumberFormat);
                     index++;
                 }

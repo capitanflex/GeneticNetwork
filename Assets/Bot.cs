@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,16 @@ public class Bot : MonoBehaviour
 
     private int checkpointIndex;
     private bool isCrashed;
+
+    [SerializeField] private List<GameObject> checkPoints;
+
+    private void Start()
+    {
+        for (int i = 2; i < GameObject.FindGameObjectsWithTag("CheckPoint").Length + 2; i++)
+        {
+            checkPoints.Add(GameObject.Find("CheckPoint (" + i + ")"));
+        }
+    }
 
     void FixedUpdate()
     {
@@ -44,19 +55,22 @@ public class Bot : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("CheckPoint"))
+        
+        if (collision.collider.gameObject.layer == 7)
         {
-            GameObject[] checkPoints = GameObject.FindGameObjectsWithTag("CheckPoint");
-            for (int i = 0; i < checkPoints.Length; i++)
+            for (int i = 0; i < checkPoints.Count; i++)
             {
-                if (collision.collider.gameObject == checkPoints[i] && i == (checkpointIndex + 1 + checkPoints.Length) % checkPoints.Length)
+                if (collision.collider.gameObject == checkPoints[i].gameObject)
                 {
-                    checkpointIndex++;
-                    break;
+                    if (i == (checkpointIndex + 1 + checkPoints.Count) % checkPoints.Count)
+                    {
+                        checkpointIndex++;
+                        break;
+                    }
                 }
             }
         }
-        else if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Learner"))
+        else if (collision.collider.gameObject.layer != 6)
         {
             isCrashed = true;
 

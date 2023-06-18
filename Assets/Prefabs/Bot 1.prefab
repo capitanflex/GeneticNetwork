@@ -51,6 +51,7 @@ MonoBehaviour:
     m_Bits: 1
   speedFactor: 0.25
   rotationFactor: 6
+  checkPoints: []
 --- !u!54 &611524562607086840
 Rigidbody:
   m_ObjectHideFlags: 0
